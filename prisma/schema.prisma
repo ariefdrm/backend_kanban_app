@@ -12,12 +12,23 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // relationMode = "prisma"
 }
 
 model users {
-  id        String   @id @default(uuid(7)) @db.Uuid
-  email     String   @unique
-  password  String
-  name      String?
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
+  password      String
+  name          String?
+  refreshtokens refreshtoken[]
+  createdAt     DateTime       @default(now())
+}
+
+model refreshtoken {
+  id        String   @id @default(uuid()) @db.Uuid
+  token     String
+  user_id   String   @db.Uuid
+  user      users    @relation(fields: [user_id], references: [id])
   createdAt DateTime @default(now())
+  expiresAt DateTime
 }
