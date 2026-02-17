@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  app:
+    container_name: nestjs-app-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # target: production
+    image: nestjs-prod
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # NODE_ENV: production
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: db
+      DATABASE_PASSWORD: secret
+      DATABASE_NAME: appdb
+    depends_on:
+      - db
+    networks:
+      - backend
+
+  db:
+    container_name: postgres-db-prod
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nestuser
+      POSTGRES_PASSWORD: nestpass
+      POSTGRES_DB: nestdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:Z
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:
+    driver: bridge

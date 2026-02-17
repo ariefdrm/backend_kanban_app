@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from 'src/generated/prisma/client';
 import * as bcrypt from 'bcrypt'
 import 'dotenv/config'
+import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class UsersService {
@@ -27,6 +28,7 @@ export class UsersService {
     })
   }
 
+  @UseGuards(AuthGuard('jwt'))
   async findAll() {
     return await this.prisma.users.findMany()
   }

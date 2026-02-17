@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  app:
+    container_name: nestjs-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nestjs-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app:Z
+      - /usr/src/app/node_modules
+    environment:
+      DATABASE_URL: postgres://db:secret@db:5432/appdb
+    depends_on:
+      - db
+    command: npm run start:dev
+
+  db:
+    container_name: postgres-db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: db
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: appdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:Z
+
+volumes:
+  postgres_data:
