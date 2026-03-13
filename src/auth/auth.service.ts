@@ -28,8 +28,7 @@ export class AuthService {
 
   async login(email: string, password: string) {
     const user = await this.userServices.findByEmail(email)
-
-    if (!user) throw new UnauthorizedException("Invalid Credentials")
+    if (!user) throw new UnauthorizedException("Invalid email")
 
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) throw new UnauthorizedException("Invalid password")
@@ -41,8 +40,7 @@ export class AuthService {
     })
 
     const refreshToken = uuidV4()
-
-    const refreshTokenHash = await bcrypt.hash(refreshToken, 10)
+    const refreshTokenHash = await bcrypt.hash(refreshToken, Number(process.env["SALT_ROUND"]))
 
     await this.prismaService.refreshtoken.create({
       data: {

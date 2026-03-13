@@ -12,9 +12,11 @@ services:
       - "3000:3000"
     volumes:
       - .:/usr/src/app:Z
-      - /usr/src/app/node_modules
+      - node_modules_nestjs:/usr/src/app/node_modules
+    env_file:
+      - ".env"
     environment:
-      DATABASE_URL: postgres://db:secret@db:5432/appdb
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
       - db
     command: npm run start:dev
@@ -30,7 +32,8 @@ services:
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: appdb
     volumes:
-      - postgres_data:/var/lib/postgresql/data:Z
+      - postgres_data_nestjs:/var/lib/postgresql/data:Z
 
 volumes:
-  postgres_data:
+  postgres_data_nestjs:
+  node_modules_nestjs:

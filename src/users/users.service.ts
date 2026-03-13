@@ -28,7 +28,6 @@ export class UsersService {
     })
   }
 
-  @UseGuards(AuthGuard('jwt'))
   async findAll() {
     return await this.prisma.users.findMany()
   }

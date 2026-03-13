@@ -32,12 +32,12 @@ services:
       POSTGRES_PASSWORD: nestpass
       POSTGRES_DB: nestdb
     volumes:
-      - postgres_data:/var/lib/postgresql/data:Z
+      - postgres_data_nestjs:/var/lib/postgresql/data:Z
     networks:
       - backend
 
 volumes:
-  postgres_data:
+  postgres_data_nestjs:
 
 networks:
   backend:
